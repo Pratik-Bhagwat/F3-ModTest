@@ -33,7 +33,7 @@ async function getClientIp() {
 // Function to get geolocation data using IP address
 async function toGetGeolocation(IP) {
   try {
-    const res = await fetch(`http://ip-api.com/json/${IP}`);
+    const res = await fetch(`https://ip-api.com/json/${IP}`);
     const data = await res.json();
     // Update the DOM elements with geolocation data
     lattitudeSpan.textContent = data.lat;
