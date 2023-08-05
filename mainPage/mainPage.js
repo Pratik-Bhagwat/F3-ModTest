@@ -30,27 +30,30 @@ async function getClientIp() {
   }
 }
 
-// Function to get geolocation data using IP address
 async function toGetGeolocation(IP) {
   try {
-    const res = await fetch(`https://ip-api.com/json/${IP}`);
+    const apiKey = "bed56518d8974f55039118bbdb806c56"; // Replace 'YOUR_API_KEY' with your actual API key from ipstack
+    const res = await fetch(
+      `http://api.ipstack.com/${IP}?access_key=${apiKey}`
+    );
     const data = await res.json();
+
     // Update the DOM elements with geolocation data
-    lattitudeSpan.textContent = data.lat;
-    longitudeSpan.textContent = data.lon;
+    lattitudeSpan.textContent = data.latitude;
+    longitudeSpan.textContent = data.longitude;
     citySpan.textContent = data.city;
-    regionSpan.textContent = data.region;
-    organisationSpan.textContent = data.org;
+    regionSpan.textContent = data.region_name;
+    organisationSpan.textContent = data.organization;
     hostNameSpan.textContent = data.isp;
     iframe.setAttribute(
       "src",
-      `https://maps.google.com/maps?q=${data.lat},${data.lon}&z=15&output=embed`
+      `https://maps.google.com/maps?q=${data.latitude},${data.longitude}&z=15&output=embed`
     );
     timeZoneSpan.textContent = data.timezone;
     dateAndTimeSpan.textContent = new Date().toLocaleString();
     pincodeSpan.textContent = data.zip;
     // Fetch post office data using the zip code
-    getAllPostOffices(data.zip);
+    await getAllPostOffices(data.zip);
   } catch (error) {
     console.log(error);
   }
@@ -64,9 +67,8 @@ async function getAllPostOffices(pincode) {
     const obj = data[0];
     messageSpan.textContent = obj.Message;
     postOffices = obj.PostOffice;
-    console.log(postOffices);
     // Render post office data on the web page
-    renderPostOffices(postOffices);
+    renderPostOffices();
   } catch (error) {
     console.log(error);
   }
@@ -74,11 +76,14 @@ async function getAllPostOffices(pincode) {
 
 // Function to render post office data on the web page
 function renderPostOffices() {
-  postOffices.map((office) => {
+  cardsDiv.innerHTML = ""; // Clear previous results
+
+  postOffices.forEach((office) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
 
-    cardDiv.innerHTML = ` <span>Name: <span class="innerSpan">${office.Name}</span></span>
+    cardDiv.innerHTML = `
+        <span>Name: <span class="innerSpan">${office.Name}</span></span>
         <span>Branch Type: <span class="innerSpan">${office.BranchType}</span></span>
         <span>Delivery Status: <span class="innerSpan">${office.DeliveryStatus}</span></span>
         <span>District: <span class="innerSpan">${office.District}</span></span>
