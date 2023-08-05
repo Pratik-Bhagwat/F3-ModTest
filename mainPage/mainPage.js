@@ -30,24 +30,21 @@ async function getClientIp() {
   }
 }
 
+// Function to get geolocation data using IP address
 async function toGetGeolocation(IP) {
   try {
-    const apiKey = "bed56518d8974f55039118bbdb806c56"; // Replace 'YOUR_API_KEY' with your actual API key from ipstack
-    const res = await fetch(
-      `http://api.ipstack.com/${IP}?access_key=${apiKey}`
-    );
+    const res = await fetch(`http://ip-api.com/json/${IP}`);
     const data = await res.json();
-
     // Update the DOM elements with geolocation data
-    lattitudeSpan.textContent = data.latitude;
-    longitudeSpan.textContent = data.longitude;
+    lattitudeSpan.textContent = data.lat;
+    longitudeSpan.textContent = data.lon;
     citySpan.textContent = data.city;
-    regionSpan.textContent = data.region_name;
-    organisationSpan.textContent = data.organization;
+    regionSpan.textContent = data.region;
+    organisationSpan.textContent = data.org;
     hostNameSpan.textContent = data.isp;
     iframe.setAttribute(
       "src",
-      `https://maps.google.com/maps?q=${data.latitude},${data.longitude}&z=15&output=embed`
+      `https://maps.google.com/maps?q=${data.lat},${data.lon}&z=15&output=embed`
     );
     timeZoneSpan.textContent = data.timezone;
     dateAndTimeSpan.textContent = new Date().toLocaleString();
