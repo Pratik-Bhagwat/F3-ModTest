@@ -32,26 +32,27 @@ async function getClientIp() {
 
 // Function to get geolocation data using IP address
 async function toGetGeolocation(IP) {
+  // b44c392ec44823effbef23d81dd68179
   try {
-    const res = await fetch(`https://api.ipapi.is/?q=${IP}`);
+    const res = await fetch(`https://ipapi.co/${IP}/json/`);
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     // Update the DOM elements with geolocation data
-    lattitudeSpan.textContent = data.location.latitude;
-    longitudeSpan.textContent = data.location.longitude;
-    citySpan.textContent = data.location.city;
-    regionSpan.textContent = data.location.country;
-    organisationSpan.textContent = data.asn.org;
-    hostNameSpan.textContent = data.asn.org;
+    lattitudeSpan.textContent = data.latitude;
+    longitudeSpan.textContent = data.longitude;
+    citySpan.textContent = data.city;
+    regionSpan.textContent = data.region;
+    organisationSpan.textContent = data.org;
+    hostNameSpan.textContent = data.org;
     iframe.setAttribute(
       "src",
-      `https://maps.google.com/maps?q=${data.location.latitude},${data.location.longitude}&z=15&output=embed`
+      `https://maps.google.com/maps?q=${data.latitude},${data.longitude}&z=15&output=embed`
     );
-    timeZoneSpan.textContent = data.location.timezone;
+    timeZoneSpan.textContent = data.timezone;
     dateAndTimeSpan.textContent = new Date().toLocaleString();
-    pincodeSpan.textContent = data.location.zip;
-    // Fetch post office data using the zip code
-    await getAllPostOffices(data.location.zip);
+    pincodeSpan.textContent = data.postal;
+    // Fetch post office data using the postal code
+    await getAllPostOffices(data.postal);
   } catch (error) {
     console.log(error);
   }
